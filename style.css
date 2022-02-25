@@ -28,7 +28,7 @@
     background-color: #3882f6;
 }
 
-.evaluate {
+.equal {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -71,7 +71,7 @@ button:hover {
 
     
 }
-.display-2 {
+.main-display {
     height: 100px;
     padding: 25px 0px;
     margin-bottom: 15px;
@@ -81,7 +81,7 @@ button:hover {
     justify-content: flex-end;
     
 }
-.display-1 {
+.top-display {
     height: 50px;
     justify-content: flex-end;
     border-bottom-left-radius: 0px;
@@ -94,10 +94,10 @@ span {
 
 
 
-
 .display-value {
     align-self: flex-start;
     font-size: 24px;
+    padding-right: 5px;
 }
 
 
