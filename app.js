@@ -3,70 +3,84 @@ const mainDisplay = document.querySelector('.main-display');
 const buttons = Array.from(document.querySelectorAll('button'));
 const numbers = Array.from(document.querySelectorAll('.number'));
 const operators = Array.from(document.querySelectorAll('.operators'));
+let initialValue = mainDisplay.querySelector('.initial-value')
 
 
 // Math Functions:
-const add = function(...arr) {
-    const sum = arr.reduce((total, num) => total + num, 0);
-  return sum;
+const add = function(firstValue, secondValue) {
+    const sum = parseInt(firstValue) + parseInt(secondValue)
+    return sum;
 };
 
-const subtract = function(...arr) {
-    const subtraction = arr.reduce((previousValue, currentValue) => previousValue - currentValue);
+const subtract = function(firstValue, secondValue) {
+    const subtraction = firstValue - secondValue
     return subtraction;
 };
 
-
-const multiply = function(...arr) {
-  const product = arr.reduce((previousValue, currentValue) => previousValue * currentValue);
-return product;
+const multiply = function(firstValue, secondValue) {
+  const product = firstValue * secondValue
+  return product;
 };
 
-const divide = function(...arr) {
-    const division = arr.reduce((previousValue, currentValue) => previousValue / currentValue);
-  return division;
+const divide = function(firstValue, secondValue) {
+    const division = firstValue / secondValue
+    return division;
   };
 
-const operate = function(operator, ...arr) {
-    if (operator === add) return add(...arr)
-    if (operator === subtract) return subtract(...arr)
-    if (operator === multiply) return multiply(...arr)
-    if (operator === divide) return divide(...arr)
+const power = function(firstValue, secondValue) {
+    return Math.pow(firstValue, secondValue)
+  };
+
+const operate = function(operator, firstValue, secondValue) {
+    if (operator === 'add') return add(firstValue, secondValue)
+    if (operator === 'subtract') return subtract(firstValue, secondValue)
+    if (operator === 'multiply') return multiply(firstValue, secondValue)
+    if (operator === 'divide') return divide(firstValue, secondValue)
+    if (operator === 'power') return power(firstValue,secondValue)
 }
-
-
 
 
 // Display Functions:
 const displayValue = function(e) {
-    const view = e.target.value
-    const span = document.createElement('span');
-    span.textContent = view;
-    mainDisplay.appendChild(span);
+    if (initialValue.classList.contains('initial-value') || topDisplay.childElementCount != 0) {
+        initialValue.remove()
+    }
+    if (mainDisplay.childElementCount < 22) {
+        const view = e.target.value
+        const span = document.createElement('span');
+        span.className = 'main-display-value';
+        span.textContent = view;
+        mainDisplay.appendChild(span);     
+    }
 }
 
-// when one of the operator functions are pressed
 const operatorFunc = function(e) {
-    const span = document.querySelector('span');
-    const div = document.querySelector('.display-value')
     const firstArray = Array.from(mainDisplay.querySelectorAll('span')).map(x => x.innerText)
     const secondArray = Array.from(topDisplay.querySelectorAll('div')).map(x => x.innerText)
+    const div = topDisplay.querySelector('.display-operator')
+    const solution = topDisplay.querySelector('.solution')
     const operator = e.target.value
-    if (operator != '=') {
-        if (topDisplay.childElementCount === 0) {
+    if (operator != '=' && topDisplay.childElementCount === 0) {
             clearDisplay()
             storeFirstValue(firstArray, operator)
-            // console.log(firstValue, secondValue)
-        } else {
+        } else if (topDisplay.childElementCount != 0) {
+            storedOperator = div.textContent
+            const getOperator = getOperatorValue(storedOperator)
             const firstValue = getValue(secondArray);
             const secondValue = getValue(firstArray);
-            evaluate(firstValue, secondValue);
-        }
-    } else {
-        storeFirstValue(firstArray, operator)
-        setTimeout(clearDisplay, 1000);
+            storeSecondValue(firstArray);
+            const solution = operate(getOperator, firstValue, secondValue);
+            displaySolution(solution)
+        } else if (operator === '=' && topDisplay.childElementCount != 0) {
+            const getOperator = getOperatorValue(storedOperator)
+            const firstValue = getValue(secondArray);
+            const secondValue = getValue(firstArray);
+            const solution = operate(getOperator, firstValue, secondValue);
+            displaySolution(solution)
+        } else {
+            storeFirstValue(firstArray, operator)
+            setTimeout(clearDisplay, 1000);
     }
-
 }
 
 function storeFirstValue(arr, operator) {
@@ -78,18 +92,47 @@ function storeFirstValue(arr, operator) {
     topDisplay.appendChild(valueDiv)
     if (operator != '=') {
         const operatorDiv = document.createElement('div');
-        operatorDiv.className = 'display-value';
+        operatorDiv.className = 'display-operator';
         operatorDiv.textContent = `${operator}`
         topDisplay.appendChild(operatorDiv)
     }
-
 }
+
+function storeSecondValue(arr) {
+    const value = getValue(arr)
+    const valueDiv = document.createElement('div');
+    valueDiv.className = 'display-value';
+    valueDiv.textContent = `${value}`
+    topDisplay.appendChild(valueDiv)
+}
+
 
 function clearDisplay() {
     const spans = Array.from(document.querySelectorAll('span'));
-    const divs = Array.from(document.querySelectorAll('.display-value'));
-    spans.forEach(span => span.remove());
+    const divs = Array.from(topDisplay.querySelectorAll('div'));
     divs.forEach(div => div.remove());
+    spans.forEach(span => span.remove());
+        // const initialZero = initialValue
+        // initialZero.className = 'initial-value';
+        // initialZero.textContent = '0';
+        // mainDisplay.appendChild(initialZero);
+}
+
+function clearMainDisplay() {
+    const spans = Array.from(document.querySelectorAll('span'));
+    spans.forEach(span => span.remove());
+}
+
+function clearButton() {
+    const spans = Array.from(document.querySelectorAll('span'));
+    const divs = Array.from(topDisplay.querySelectorAll('div'));
+    divs.forEach(div => div.remove());
+    spans.forEach(span => span.remove());
+    const initialZero = initialValue
+    initialZero.className = 'initial-value';
+    initialZero.textContent = '0';
+    mainDisplay.appendChild(initialZero);
+
 }
 
 const getValue = function(arr) {
@@ -98,18 +141,32 @@ const getValue = function(arr) {
     return filtered.join("")
 }
 
-
-
-const evaluate = function (num1, num2) {
-console.log(num1, num2);
+const getOperatorValue = function(storedOperator) {
+    if (storedOperator === '+') return 'add'
+    if (storedOperator === '−') return 'subtract'
+    if (storedOperator === '×') return 'multiply'
+    if (storedOperator === '÷') return 'divide'
+    if (storedOperator === '^') return 'power'
 }
 
-    
+// STILL NEED TO WORK ON:
+// 1. top display clearing when solution is executed. Need it to show equation.
+// 2. add keyboard functionality.
+// 3. shrink displays if numbers start to overflow and eventually stop allowing users to enter numbers.  
 
+
+const displaySolution = function(solution) {
+    clearDisplay()
+    const solutionDisplay = document.createElement('span');
+    solutionDisplay.className = 'solution';
+    solutionDisplay.textContent = `${solution}`
+    mainDisplay.appendChild(solutionDisplay);
+
+}
 
 // Events
 numbers.forEach(number => number.addEventListener('click', displayValue))
 operators.forEach(operator => operator.addEventListener('click', operatorFunc))
-const btnClear = document.querySelector('#clear').onclick = clearDisplay
-// const equal = document.querySelector('.equal').onclick = evaluate(firstValue,secondValue)
+const btnClear = document.querySelector('#clear').onclick = clearButton
+const btnClearEntry = document.querySelector('#clear-entry').onclick = clearMainDisplay
 

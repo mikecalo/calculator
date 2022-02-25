@@ -93,8 +93,13 @@ span {
 }
 
 
-
 .display-value {
+    align-self: flex-start;
+    font-size: 24px;
+    padding-right: 5px;
+}
+
+.display-operator {
     align-self: flex-start;
     font-size: 24px;
     padding-right: 5px;
@@ -102,7 +107,12 @@ span {
 
 
 
+
 #clear {
+    background-color: #f58985;
+}
+
+#clear-entry {
     background-color: #f58985;
 }
 
