@@ -5,8 +5,8 @@
   <ul>
   <li>HMTL</li>
   <li>CSS</li>
-  <li>JavaScript<li>
-  <li>DOM Manipulation<li>
+  <li>JavaScript</li>
+  <li>DOM Manipulation</li>
 </p>
   
  <p><a href="https://mikecalo.github.io/calculator">Live Preview</a> </p>
