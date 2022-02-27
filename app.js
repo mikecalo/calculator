@@ -7,7 +7,6 @@ const operators = Array.from(document.querySelectorAll('.operators'));
 let initialValue = mainDisplay.querySelector('.initial-value')
 
 
-
 // Math Functions:
 const add = function(firstValue, secondValue) {
     const sum = parseFloat(firstValue) + parseFloat(secondValue)
@@ -41,10 +40,10 @@ const operate = function(operator, firstValue, secondValue) {
     if (operator === 'power') return power(firstValue,secondValue)
 }
 
+
 // Display Functions:
 const displayValue = function(e) {
     const solution = document.querySelectorAll('.solution')
-
     if (e.target.value != '.') {
         initialValue.remove()
     }
@@ -92,7 +91,6 @@ const operatorFunc = function(e) {
             const secondValue = getValue(firstArray);
             const solution = operate(getOperator, firstValue, secondValue);
             displaySolution(solution)
-        // } else if (operator === '=' && topDisplay.childElementCount === 0) {
         } else if (operator === '=' && topDisplay.childElementCount != 0 && mainDisplay.childElementCount === 0) {
             const firstValue = getValue(secondArray)
             displaySolution(firstValue)
@@ -103,7 +101,6 @@ const operatorFunc = function(e) {
 }
 
 function storeFirstValue(arr, operator) {
-    // logic to display value at the top of display window 
     const value = getValue(arr)
     const valueDiv = document.createElement('div');
     valueDiv.className = 'display-value';
@@ -155,7 +152,6 @@ function clearButton() {
 const getValue = function(arr) {
     const joined = arr.join("")
     const mapped = arr.map(Number)
-    // const filtered = mapped.filter(Number.isInteger)
     if (arr.includes('.') || mapped[0] === parseFloat(joined)) return (parseFloat(joined))
     return parseInt(joined)
 }
@@ -183,11 +179,10 @@ const displaySolution = function(solution) {
     }
 }
 
+
 // Events
 numbers.forEach(number => number.addEventListener('click', displayValue))
 operators.forEach(operator => operator.addEventListener('click', operatorFunc))
 const btnClear = document.querySelector('#clear').onclick = clearButton
 const btnClearEntry = document.querySelector('#clear-entry').onclick = clearMainDisplay
-// window.addEventListener('keydown', displayValue);
-// window.addEventListener('keydown', operatorFunc);
 
