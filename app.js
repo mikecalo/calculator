@@ -8,31 +8,17 @@ let initialValue = mainDisplay.querySelector('.initial-value')
 
 
 // Math Functions:
-const add = function(firstValue, secondValue) {
-    const sum = parseFloat(firstValue) + parseFloat(secondValue)
-    return sum;
-};
+const add = (firstValue, secondValue) => parseFloat(firstValue) + parseFloat(secondValue)
 
-const subtract = function(firstValue, secondValue) {
-    const subtraction = firstValue - secondValue
-    return subtraction;
-};
+const subtract = (firstValue, secondValue) => firstValue - secondValue
 
-const multiply = function(firstValue, secondValue) {
-  const product = firstValue * secondValue
-  return product;
-};
+const multiply = (firstValue, secondValue) => firstValue * secondValue
 
-const divide = function(firstValue, secondValue) {
-    const division = firstValue / secondValue
-    return division;
-  };
+const divide = (firstValue, secondValue) => firstValue / secondValue
 
-const power = function(firstValue, secondValue) {
-    return Math.pow(firstValue, secondValue)
-  };
+const power = (firstValue, secondValue) => Math.pow(firstValue, secondValue)
 
-const operate = function(operator, firstValue, secondValue) {
+const operate = (operator, firstValue, secondValue) => {
     if (operator === 'add') return add(firstValue, secondValue)
     if (operator === 'subtract') return subtract(firstValue, secondValue)
     if (operator === 'multiply') return multiply(firstValue, secondValue)
@@ -69,19 +55,19 @@ const operatorFunc = function(e) {
     const operator = e.target.value
     if (operator != '=' && mainDisplay.childElementCount === 0) {
             clearDisplay()
-            storeFirstValue(secondArray, operator)
+            appendFirstValue(secondArray, operator)
         } else if (operator != '=' && topDisplay.childElementCount === 0 && solution.length === 0) {
             clearDisplay()
-            storeFirstValue(firstArray, operator)
+            appendFirstValue(firstArray, operator)
         } else if (operator != '=' && topDisplay.childElementCount === 0 && solution.length > 0) {
             clearDisplay()
-            storeFirstValue(firstArray, operator)
+            appendFirstValue(firstArray, operator)
         } else if (operator != '=' && topDisplay.childElementCount != 0) {
             storedOperator = div.textContent
             const getOperator = getOperatorValue(storedOperator)
             const firstValue = secondArray[0]
             const secondValue = getValue(firstArray);
-            storeSecondValue(firstArray);
+            appendSecondValue(firstArray);
             const solution = operate(getOperator, firstValue, secondValue);
             displaySolution(solution)
         } else if (operator === '=' && topDisplay.childElementCount != 0 && mainDisplay.childElementCount != 0) {
@@ -100,7 +86,7 @@ const operatorFunc = function(e) {
     }
 }
 
-function storeFirstValue(arr, operator) {
+function appendFirstValue(arr, operator) {
     const value = getValue(arr)
     const valueDiv = document.createElement('div');
     valueDiv.className = 'display-value';
@@ -114,14 +100,13 @@ function storeFirstValue(arr, operator) {
     }
 }
 
-function storeSecondValue(arr) {
+function appendSecondValue(arr) {
     const value = getValue(arr)
     const valueDiv = document.createElement('div');
     valueDiv.className = 'display-value';
     valueDiv.textContent = `${value}`
     topDisplay.appendChild(valueDiv)
 }
-
 
 function clearDisplay() {
     const spans = Array.from(document.querySelectorAll('span'));
@@ -163,7 +148,6 @@ const getOperatorValue = function(storedOperator) {
     if (storedOperator === '÷') return 'divide'
     if (storedOperator === '^') return 'power'
 }
-
 
 const displaySolution = function(solution) {
     clearDisplay()
