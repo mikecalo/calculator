@@ -10,7 +10,6 @@ const dot = document.querySelector('#decimal')
 let numericDisplayValue = [0]
 
 
-
 // Math Functions:
 const add = (firstValue, secondValue) => parseFloat(firstValue) + parseFloat(secondValue)
 
@@ -29,7 +28,6 @@ const operate = (operator, firstValue, secondValue) => {
     if (operator === 'divide') return divide(firstValue, secondValue)
     if (operator === 'power') return power(firstValue,secondValue)
 }
-
 
 // Display Functions:
 const displayValue = function(e) {
@@ -54,8 +52,7 @@ const operatorFunc = function(e) {
     let secondValue = 0
     let solutionValue = 0
     let storedOperator = 0
-    let roundedSolutionValue = Math.round((solutionValue * 10000000)) / 10000000
-
+    let roundedSolutionValue = 0
     if (operator != '=') {
         if (topDisplayValue.textContent === '') {
             firstValue = mainDisplayValue.textContent
@@ -87,32 +84,6 @@ const operatorFunc = function(e) {
         }
     }
 }
-
-//     if (operator != '=' && numericDisplayValue.length >= 1 && topDisplayValue.textContent === '') {
-//         firstValue = mainDisplayValue.textContent
-//         appendFirstValue(firstValue, operator)
-//         clearMainDisplay()
-//     } else if (operator != '=' && topDisplayValue.textContent != '' && mainDisplayValue.textContent === '0') {
-//         firstValue = topDisplayValue.textContent
-//         appendFirstValue(firstValue, operator)
-//         clearMainDisplay()
-//     } else if (operator != '=' && topDisplayValue.textContent != '' && mainDisplayValue.textContent != '0') {
-//         firstValue = topDisplayValue.textContent
-//         secondValue = mainDisplayValue.textContent
-//         storedOperator = getOperatorValue(displayOperator.textContent)
-//         solutionValue = operate(storedOperator, firstValue, secondValue);
-//         appendFirstValue(solutionValue, operator)
-//         clearMainDisplay()
-//     } else if (operator === '=' && topDisplayValue.textContent === '') {
-//         displaySolution(firstValue)
-//     } else if (operator === '=' && topDisplay.childElementCount != '' && mainDisplayValue.textContent != '0') {
-//         firstValue = topDisplayValue.textContent
-//         secondValue = mainDisplayValue.textContent
-//         storedOperator = getOperatorValue(displayOperator.textContent)
-//         solutionValue = operate(storedOperator, firstValue, secondValue);
-//         displaySolution(solutionValue)        
-//     }
-// }
 
 function appendFirstValue(Value, operator) {
     topDisplayValue.textContent = Value
