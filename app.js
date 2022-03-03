@@ -1,10 +1,14 @@
 const topDisplay = document.querySelector('.top-display');
 const mainDisplay = document.querySelector('.main-display');
+const mainDisplayValue = document.querySelector('.main-display-value')
+const topDisplayValue = document.querySelector('.top-display-value')
+const displayOperator = document.querySelector('.top-display-operator')
 const buttons = Array.from(document.querySelectorAll('button'));
 const numbers = Array.from(document.querySelectorAll('.number'));
-const dot = document.querySelector('#decimal')
 const operators = Array.from(document.querySelectorAll('.operators'));
-let initialValue = mainDisplay.querySelector('.initial-value')
+const dot = document.querySelector('#decimal')
+let numericDisplayValue = [0]
+
 
 
 // Math Functions:
@@ -30,115 +34,105 @@ const operate = (operator, firstValue, secondValue) => {
 // Display Functions:
 const displayValue = function(e) {
     const solution = document.querySelectorAll('.solution')
+    if (e.target.value === '.') e.target.disabled = true
     if (e.target.value != '.') {
-        initialValue.remove()
     }
     if (solution.length > 0) {
         clearDisplay()
     }
-    if (mainDisplay.childElementCount < 22) {
-        const view = e.target.value
-        const span = document.createElement('span');
-        span.className = 'main-display-value';
-        span.textContent = view;
-        mainDisplay.appendChild(span);     
+    if (numericDisplayValue.length < 22) {
+        if (numericDisplayValue[0] === 0) numericDisplayValue.shift()
+        numericDisplayValue.push(e.target.value)
+        let displayValueStr = numericDisplayValue.join('')
+        mainDisplayValue.textContent = displayValueStr
     }
-    if (e.target.value === '.') e.target.disabled = true
 }
 
 const operatorFunc = function(e) {
-    const firstArray = Array.from(mainDisplay.querySelectorAll('span')).map(x => x.innerText)
-    const secondArray = Array.from(topDisplay.querySelectorAll('div')).map(x => x.innerText)
-    const div = topDisplay.querySelector('.display-operator')
-    const solution = mainDisplay.querySelectorAll('.solution')
-
     const operator = e.target.value
-    if (operator != '=' && mainDisplay.childElementCount === 0) {
-            clearDisplay()
-            appendFirstValue(secondArray, operator)
-        } else if (operator != '=' && topDisplay.childElementCount === 0 && solution.length === 0) {
-            clearDisplay()
-            appendFirstValue(firstArray, operator)
-        } else if (operator != '=' && topDisplay.childElementCount === 0 && solution.length > 0) {
-            clearDisplay()
-            appendFirstValue(firstArray, operator)
-        } else if (operator != '=' && topDisplay.childElementCount != 0) {
-            storedOperator = div.textContent
-            const getOperator = getOperatorValue(storedOperator)
-            const firstValue = secondArray[0]
-            const secondValue = getValue(firstArray);
-            appendSecondValue(firstArray);
-            const solution = operate(getOperator, firstValue, secondValue);
-            displaySolution(solution)
-        } else if (operator === '=' && topDisplay.childElementCount != 0 && mainDisplay.childElementCount != 0) {
-            storedOperator = div.textContent
-            const getOperator = getOperatorValue(storedOperator)
-            const firstValue = secondArray[0]
-            const secondValue = getValue(firstArray);
-            const solution = operate(getOperator, firstValue, secondValue);
-            displaySolution(solution)
-        } else if (operator === '=' && topDisplay.childElementCount != 0 && mainDisplay.childElementCount === 0) {
-            const firstValue = getValue(secondArray)
+    let firstValue = mainDisplayValue.textContent
+    let secondValue = 0
+    let solutionValue = 0
+    let storedOperator = 0
+    let roundedSolutionValue = Math.round((solutionValue * 10000000)) / 10000000
+
+    if (operator != '=') {
+        if (topDisplayValue.textContent === '') {
+            firstValue = mainDisplayValue.textContent
+            appendFirstValue(firstValue, operator)
+            clearMainDisplay()
+        } else if (topDisplayValue.textContent != '' && mainDisplayValue.textContent === '0') {
+            firstValue = topDisplayValue.textContent
+            appendFirstValue(firstValue, operator)
+            clearMainDisplay()
+        } else {
+            firstValue = topDisplayValue.textContent
+            secondValue = mainDisplayValue.textContent
+            storedOperator = getOperatorValue(displayOperator.textContent)
+            solutionValue = operate(storedOperator, firstValue, secondValue);
+            roundedSolutionValue = Math.round((solutionValue * 10000000)) / 10000000
+            appendFirstValue(roundedSolutionValue, operator)
+            clearMainDisplay()
+        }
+    } else if (operator === '=') {
+        if (topDisplayValue.textContent === '') {
             displaySolution(firstValue)
         } else {
-            const firstValue = getValue(firstArray)
-            displaySolution(firstValue)
+            firstValue = topDisplayValue.textContent
+            secondValue = mainDisplayValue.textContent
+            storedOperator = getOperatorValue(displayOperator.textContent)
+            solutionValue = operate(storedOperator, firstValue, secondValue);
+            roundedSolutionValue = Math.round((solutionValue * 10000000)) / 10000000
+            displaySolution(roundedSolutionValue)   
+        }
     }
 }
 
-function appendFirstValue(arr, operator) {
-    const value = getValue(arr)
-    const valueDiv = document.createElement('div');
-    valueDiv.className = 'display-value';
-    valueDiv.textContent = `${value}`
-    topDisplay.appendChild(valueDiv)
+//     if (operator != '=' && numericDisplayValue.length >= 1 && topDisplayValue.textContent === '') {
+//         firstValue = mainDisplayValue.textContent
+//         appendFirstValue(firstValue, operator)
+//         clearMainDisplay()
+//     } else if (operator != '=' && topDisplayValue.textContent != '' && mainDisplayValue.textContent === '0') {
+//         firstValue = topDisplayValue.textContent
+//         appendFirstValue(firstValue, operator)
+//         clearMainDisplay()
+//     } else if (operator != '=' && topDisplayValue.textContent != '' && mainDisplayValue.textContent != '0') {
+//         firstValue = topDisplayValue.textContent
+//         secondValue = mainDisplayValue.textContent
+//         storedOperator = getOperatorValue(displayOperator.textContent)
+//         solutionValue = operate(storedOperator, firstValue, secondValue);
+//         appendFirstValue(solutionValue, operator)
+//         clearMainDisplay()
+//     } else if (operator === '=' && topDisplayValue.textContent === '') {
+//         displaySolution(firstValue)
+//     } else if (operator === '=' && topDisplay.childElementCount != '' && mainDisplayValue.textContent != '0') {
+//         firstValue = topDisplayValue.textContent
+//         secondValue = mainDisplayValue.textContent
+//         storedOperator = getOperatorValue(displayOperator.textContent)
+//         solutionValue = operate(storedOperator, firstValue, secondValue);
+//         displaySolution(solutionValue)        
+//     }
+// }
+
+function appendFirstValue(Value, operator) {
+    topDisplayValue.textContent = Value
     if (operator != '=') {
-        const operatorDiv = document.createElement('div');
-        operatorDiv.className = 'display-operator';
-        operatorDiv.textContent = `${operator}`
-        topDisplay.appendChild(operatorDiv)
+        displayOperator.textContent = `${operator}`
     }
-}
-
-function appendSecondValue(arr) {
-    const value = getValue(arr)
-    const valueDiv = document.createElement('div');
-    valueDiv.className = 'display-value';
-    valueDiv.textContent = `${value}`
-    topDisplay.appendChild(valueDiv)
 }
 
 function clearDisplay() {
-    const spans = Array.from(document.querySelectorAll('span'));
-    const divs = Array.from(topDisplay.querySelectorAll('div'));
-    divs.forEach(div => div.remove());
-    spans.forEach(span => span.remove());
     dot.disabled = false
+    numericDisplayValue = [0]
+    mainDisplayValue.textContent = '0'
+    topDisplayValue.textContent = ''
+    displayOperator.textContent = ''
 }
 
 function clearMainDisplay() {
-    const spans = Array.from(document.querySelectorAll('span'));
-    spans.forEach(span => span.remove());
     dot.disabled = false
-}
-
-function clearButton() {
-    const spans = Array.from(document.querySelectorAll('span'));
-    const divs = Array.from(topDisplay.querySelectorAll('div'));
-    divs.forEach(div => div.remove());
-    spans.forEach(span => span.remove());
-    const initialZero = initialValue
-    initialZero.className = 'initial-value';
-    initialZero.textContent = '0';
-    mainDisplay.appendChild(initialZero);
-    dot.disabled = false
-}
-
-const getValue = function(arr) {
-    const joined = arr.join("")
-    const mapped = arr.map(Number)
-    if (arr.includes('.') || mapped[0] === parseFloat(joined)) return (parseFloat(joined))
-    return parseInt(joined)
+    numericDisplayValue = [0]
+    mainDisplayValue.textContent = '0'
 }
 
 const getOperatorValue = function(storedOperator) {
@@ -149,17 +143,12 @@ const getOperatorValue = function(storedOperator) {
     if (storedOperator === '^') return 'power'
 }
 
-const displaySolution = function(solution) {
+const displaySolution = function(roundedSolutionValue) {
     clearDisplay()
-    roundedSolution = Math.round((solution * 10000000)) / 10000000
-    const solutionDisplay = document.createElement('span');
-    solutionDisplay.className = 'solution';
-    if (solution === Infinity) {
+    if (roundedSolutionValue === Infinity) {
         alert("Can't divide by zero!!")
-        clearButton()
     } else {
-        solutionDisplay.textContent = `${roundedSolution}`
-        mainDisplay.appendChild(solutionDisplay);
+        mainDisplayValue.textContent = roundedSolutionValue
     }
 }
 
@@ -167,6 +156,6 @@ const displaySolution = function(solution) {
 // Events
 numbers.forEach(number => number.addEventListener('click', displayValue))
 operators.forEach(operator => operator.addEventListener('click', operatorFunc))
-const btnClear = document.querySelector('#clear').onclick = clearButton
+const btnClear = document.querySelector('#clear').onclick = clearDisplay
 const btnClearEntry = document.querySelector('#clear-entry').onclick = clearMainDisplay
 

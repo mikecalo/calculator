@@ -98,13 +98,13 @@ span {
     font-size: 36px;
 }
 
-.display-value {
+.top-display-value {
     align-self: flex-start;
     font-size: 24px;
     padding-right: 5px;
 }
 
-.display-operator {
+.top-display-operator {
     align-self: flex-start;
     font-size: 24px;
     padding-right: 5px;
